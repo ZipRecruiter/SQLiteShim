@@ -5,7 +5,7 @@ The end goal is to make it as painless as possible to use projects that utilize 
 
 Example:
     
-    Using ZipRecruiter;
+    using ZipRecruiter;
     
     public class MyCode
     {
