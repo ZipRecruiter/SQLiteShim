@@ -4,6 +4,7 @@ A mechanism to load plain 32/64bit SQLite DLLs in .Net without a lot of fuss
 The end goal is to make it as painless as possible to use projects that utilize plain SQLite, like the excelent sqlite-net project. Some environments, like ASP.net, make it hard to juggle sqlite DLLs due to the fact IISExpress runs projects in 32bit mode, but you typically will release in 64bit mode.
 
 Example:
+    
     Using ZipRecruiter;
     
     public class MyCode
