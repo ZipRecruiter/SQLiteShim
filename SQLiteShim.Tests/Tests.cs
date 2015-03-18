@@ -32,7 +32,7 @@ namespace ZipRecruiter
         {
             var libVersionStrPtr = SQLite3Consumer.LibVersion();
             var libVersionStr = Marshal.PtrToStringAnsi(libVersionStrPtr);
-            libVersionStr.Should().BeSameAs(SQLiteShim.SQLiteVersion.ToString());
+            libVersionStr.Should().BeEquivalentTo(SQLiteShim.SQLiteVersion.ToString());
         }
     }
 
