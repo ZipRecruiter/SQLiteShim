@@ -31,7 +31,7 @@ namespace ZipRecruiter
         public void CheckSQLiteVersionAgainstShimVersion()
         {
             var libVersionStrPtr = SQLite3Consumer.LibVersion();
-            var libVersionStr = Marshal.PtrToStringAuto(libVersionStrPtr);
+            var libVersionStr = Marshal.PtrToStringAnsi(libVersionStrPtr);
             libVersionStr.Should().BeSameAs(SQLiteShim.SQLiteVersion.ToString());
         }
     }

@@ -46,52 +46,23 @@ namespace ZipRecruiter
         /// </summary>
         /// <param name="dllStoragePath">An optional specific path to write the SQLite library</param>
         /// <returns></returns>
-        public static String InjectSQLite(String dllStoragePath = null)
+        public static void InjectSQLite(String dllStoragePath = null)
         {
-            string resName = String.Join(".", new[] {
-                "ZipRecruiter",
-                "platform",
-                System.Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE").ToLower(),
-                SQLiteShim.SQLiteResourceName});
-
             var thisAssembly = Assembly.GetExecutingAssembly();
-            var res = thisAssembly.GetManifestResourceNames();
-            using (var input = thisAssembly.GetManifestResourceStream(resName))
+            var thisAssemblyFolder = new Uri(Path.GetDirectoryName(thisAssembly.CodeBase)).LocalPath;
+            var desiredDll = Path.Combine(thisAssemblyFolder,
+                                          "platform",
+                                          System.Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE").ToLower(),
+                                          SQLiteShim.SQLiteResourceName);
+
+            if (File.Exists(desiredDll))
             {
-                if (String.IsNullOrWhiteSpace(dllStoragePath)){
-                    string tempDirectory = Path.Combine(Path.GetTempPath(),
-                                                        "SQLiteShim",
-                                                        thisAssembly.GetName().Version.ToString());
-                    Directory.CreateDirectory(tempDirectory);
-                    dllStoragePath = tempDirectory + "\\" + SQLiteShim.SQLiteResourceName;
-                }
-                   
-                using (Stream outFile = File.Create(dllStoragePath))
-                {
-                    const int sz = 4096;
-                    byte[] buf = new byte[sz];
-                    while (true)
-                    {
-                        int nRead = input.Read(buf, 0, sz);
-                        if (nRead < 1)
-                            break;
-                        outFile.Write(buf, 0, nRead);
-                    }
-                }
-
-                if (File.Exists(dllStoragePath))
-                {
-                    try {
-                        IntPtr h = LoadLibrary(dllStoragePath);
-                    }
-                    catch (Exception ex)
-                    {
-
-                    }
-                }
+                IntPtr h = LoadLibrary(desiredDll);
             }
-
-            return dllStoragePath;
+            else
+            {
+                throw new FileNotFoundException("Unable to locate SQLite DLL file. Please make sure your SQLiteShim distribution is complete.", desiredDll);
+            }
         }
 
         [DllImport("kernel32", SetLastError = true, CharSet = CharSet.Unicode)]
@@ -99,28 +70,5 @@ namespace ZipRecruiter
 
         [DllImport("kernel32", SetLastError = true, CharSet = CharSet.Ansi)]
         static extern IntPtr LoadLibrary([MarshalAs(UnmanagedType.LPStr)]string lpFileName);
-
-        /// <summary>
-        /// Copies a stream to a byte array and returns it.
-        /// Taken from http://stackoverflow.com/questions/96732/embedding-one-dll-inside-another-as-an-embedded-resource-and-then-calling-it-fro
-        /// </summary>
-        private static byte[] StreamToBytes(Stream input) 
-        {
-            var capacity = input.CanSeek ? (int) input.Length : 0;
-            using (var output = new MemoryStream(capacity))
-            {
-                int readLength;
-                var buffer = new byte[4096];
-
-                do
-                {
-                    readLength = input.Read(buffer, 0, buffer.Length);
-                    output.Write(buffer, 0, readLength);
-                }
-                while (readLength != 0);
-
-                return output.ToArray();
-            }
-        }
     }
 }
