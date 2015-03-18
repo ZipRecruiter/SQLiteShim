@@ -44,10 +44,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="platform\amd64\sqlite3.dll">
+    <Content Include="SQLiteShimResources\amd64\sqlite3.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="platform\x86\sqlite3.dll">
+    <Content Include="SQLiteShimResources\x86\sqlite3.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

@@ -51,7 +51,7 @@ namespace ZipRecruiter
             var thisAssembly = Assembly.GetExecutingAssembly();
             var thisAssemblyFolder = new Uri(Path.GetDirectoryName(thisAssembly.CodeBase)).LocalPath;
             var desiredDll = Path.Combine(thisAssemblyFolder,
-                                          "platform",
+                                          "SQLiteShimResources",
                                           System.Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE").ToLower(),
                                           SQLiteShim.SQLiteResourceName);
 
